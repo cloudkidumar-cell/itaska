@@ -1,0 +1,9 @@
+{
+  "name": "itaska",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["api"],
+  "scripts": {
+    "start": "node api/index.js"
+  }
+}
