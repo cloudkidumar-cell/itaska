@@ -6,6 +6,11 @@ fastify.get('/api/health', async () => {
   return { status: 'ok', node: process.version };
 });
 
+// Pintu utama: GoDaddy mengetuk alamat ini untuk memastikan app sihat
+fastify.get('/', async () => {
+  return { app: 'itaska', status: 'ok' };
+});
+
 // Hidupkan pelayan pada port 3000
 const start = async () => {
   try {
