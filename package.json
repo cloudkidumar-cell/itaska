@@ -4,6 +4,8 @@
   "private": true,
   "workspaces": ["api"],
   "scripts": {
-    "start": "node api/index.js"
+    "start": "node api/index.js",
+    "dev": "PORT=3001 node api/index.js",
+    "db:start": "/opt/homebrew/opt/mysql@8.4/bin/mysqld --no-defaults --datadir=$HOME/mysql-itaska --port=3307 --socket=/tmp/mysql-itaska.sock --mysqlx=OFF --bind-address=127.0.0.1"
   }
 }
