@@ -4,6 +4,12 @@ require('dotenv').config({ path: __dirname + '/.env' });
 const mysql = require('mysql2/promise');
 const fastify = require('fastify')({ logger: true });
 
+// Tanpa kunci rahsia, token tak boleh ditandatangani dengan selamat
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET belum ditetapkan');
+}
+fastify.register(require('@fastify/jwt'), { secret: process.env.JWT_SECRET });
+
 // Kolam sambungan: beberapa sambungan ke MySQL dikongsi dan digunakan semula
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -35,6 +41,9 @@ fastify.get('/api/db-check', async (request, reply) => {
     return { status: 'error', message: 'Tidak dapat bersambung ke pangkalan data' };
   }
 });
+
+// Pintu log masuk
+require('./auth')(fastify, pool);
 
 // Hidupkan pelayan pada port yang diberi, atau 3000
 const start = async () => {
