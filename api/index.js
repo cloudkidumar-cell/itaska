@@ -3,6 +3,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 
 const mysql = require('mysql2/promise');
 const fastify = require('fastify')({ logger: true });
+const { runMigrations } = require('./migrate');
 
 // Tanpa kunci rahsia, token tak boleh ditandatangani dengan selamat
 if (!process.env.JWT_SECRET) {
@@ -48,6 +49,11 @@ require('./auth')(fastify, pool);
 // Hidupkan pelayan pada port yang diberi, atau 3000
 const start = async () => {
   try {
+    // Migrasi automatik hanya berjalan jika suis AUTO_MIGRATE=1 dipasang
+    if (process.env.AUTO_MIGRATE === '1') {
+      const count = await runMigrations((msg) => fastify.log.info(msg));
+      fastify.log.info('Migrasi automatik: ' + count + ' dijalankan');
+    }
     await fastify.listen({ port: process.env.PORT || 3000, host: '0.0.0.0' });
   } catch (err) {
     fastify.log.error(err);
